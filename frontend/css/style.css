@@ -1,0 +1,401 @@
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f8f9fc;
+    color:#333;
+    line-height:1.6;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+a{
+    text-decoration:none;
+}
+
+ul{
+    list-style:none;
+}
+
+img{
+    width:100%;
+    display:block;
+}
+
+/* ==========================
+   NAVBAR
+========================== */
+
+header{
+    background:#fff;
+    box-shadow:0 2px 15px rgba(0,0,0,0.08);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    height:80px;
+}
+
+.logo h2{
+    color:#6C63FF;
+    font-size:30px;
+    font-weight:700;
+}
+
+.nav-links{
+    display:flex;
+    gap:30px;
+}
+
+.nav-links a{
+    color:#333;
+    font-weight:500;
+    transition:.3s;
+}
+
+.nav-links a:hover{
+    color:#6C63FF;
+}
+
+.nav-buttons{
+    display:flex;
+    gap:15px;
+}
+
+.login-btn{
+    padding:10px 20px;
+    border:2px solid #6C63FF;
+    border-radius:8px;
+    color:#6C63FF;
+    font-weight:500;
+}
+
+.register-btn{
+    padding:10px 20px;
+    border-radius:8px;
+    background:#6C63FF;
+    color:#fff;
+    font-weight:500;
+}
+
+/* ==========================
+   HERO
+========================== */
+
+.hero{
+    padding:70px 0;
+}
+
+.hero-content{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:50px;
+}
+
+.hero-text{
+    flex:1;
+}
+
+.hero-text h1{
+    font-size:58px;
+    line-height:1.2;
+    margin-bottom:20px;
+    color:#1f2937;
+}
+
+.hero-text p{
+    font-size:18px;
+    color:#666;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:20px;
+}
+
+.primary-btn{
+    background:#6C63FF;
+    color:white;
+    padding:15px 30px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.secondary-btn{
+    border:2px solid #6C63FF;
+    color:#6C63FF;
+    padding:15px 30px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.hero-image{
+    flex:1;
+}
+
+.hero-image img{
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* ==========================
+   COMMON SECTION
+========================== */
+
+section{
+    padding:80px 0;
+}
+
+.section-title{
+    text-align:center;
+    font-size:38px;
+    margin-bottom:50px;
+    color:#1f2937;
+}
+
+/* ==========================
+   CATEGORIES
+========================== */
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.category-card{
+    background:#fff;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    transition:.3s;
+    cursor:pointer;
+}
+
+.category-card:hover{
+    transform:translateY(-10px);
+}
+
+.category-card img{
+    height:220px;
+    object-fit:cover;
+}
+
+.category-card h3{
+    text-align:center;
+    padding:20px;
+    color:#333;
+}
+
+/* ==========================
+   SERVICES
+========================== */
+
+.services{
+    background:#ffffff;
+}
+
+.service-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.service-card{
+    background:#fff;
+    padding:40px 20px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    transition:.3s;
+}
+
+.service-card:hover{
+    transform:translateY(-10px);
+}
+
+.service-card i{
+    font-size:45px;
+    color:#6C63FF;
+    margin-bottom:20px;
+}
+
+.service-card h3{
+    font-size:20px;
+}
+
+/* ==========================
+   VENUES
+========================== */
+
+.venue-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.venue-card{
+    background:#fff;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    transition:.3s;
+}
+
+.venue-card:hover{
+    transform:translateY(-10px);
+}
+
+.venue-card img{
+    height:250px;
+    object-fit:cover;
+}
+
+.venue-card h3{
+    text-align:center;
+    padding:20px;
+}
+
+/* ==========================
+   FOOTER
+========================== */
+
+footer{
+    background:#1f2937;
+    color:#fff;
+    text-align:center;
+    padding:40px 0;
+}
+
+footer h2{
+    margin-bottom:10px;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:900px){
+
+    .hero-content{
+        flex-direction:column;
+    }
+
+    .hero-text h1{
+        font-size:42px;
+    }
+
+    .navbar{
+        flex-direction:column;
+        height:auto;
+        padding:20px 0;
+        gap:20px;
+    }
+
+    .nav-links{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+}
+/* ==========================
+   AUTH PAGES (LOGIN / REGISTER)
+========================== */
+
+.auth-section{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:85vh;
+    background:#f8f9fc;
+}
+
+.auth-box{
+    background:#fff;
+    width:100%;
+    max-width:450px;
+    padding:40px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    text-align:center;
+}
+
+.auth-box h2{
+    margin-bottom:10px;
+    color:#1f2937;
+}
+
+.auth-box p{
+    color:#666;
+    margin-bottom:25px;
+    font-size:14px;
+}
+
+.form-group{
+    text-align:left;
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:14px;
+    margin-bottom:6px;
+    color:#333;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    outline:none;
+    transition:0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#6C63FF;
+}
+
+.auth-btn{
+    width:100%;
+    padding:12px;
+    background:#6C63FF;
+    border:none;
+    color:#fff;
+    border-radius:8px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:10px;
+    transition:0.3s;
+}
+
+.auth-btn:hover{
+    background:#574fd6;
+}
+
+.auth-link{
+    margin-top:15px;
+    font-size:14px;
+}
+
+.auth-link a{
+    color:#6C63FF;
+    font-weight:500;
+}

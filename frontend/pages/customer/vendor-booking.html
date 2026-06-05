@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Vendors - EventSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo h2 {
+            color: #6c63ff;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 42px;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 50px;
+            font-size: 18px;
+        }
+
+        .service-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .service-tab {
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+        }
+
+        .service-tab.active {
+            background: white;
+            color: #6c63ff;
+            border-color: white;
+        }
+
+        .service-tab:hover {
+            background: white;
+            color: #6c63ff;
+            transform: translateY(-2px);
+        }
+
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .vendor-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .vendor-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .vendor-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .vendor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .vendor-card:hover .vendor-image img {
+            transform: scale(1.1);
+        }
+
+        .vendor-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #6c63ff;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .vendor-info {
+            padding: 25px;
+        }
+
+        .vendor-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 22px;
+        }
+
+        .vendor-description {
+            color: #666;
+            margin: 10px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .vendor-rating {
+            margin: 10px 0;
+            color: #ffc107;
+            font-size: 14px;
+        }
+
+        .reviews {
+            color: #999;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .vendor-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .vendor-detail-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .vendor-detail-item i {
+            color: #6c63ff;
+            font-size: 18px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .vendor-detail-item span {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .vendor-price {
+            font-size: 28px;
+            color: #6c63ff;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .vendor-price small {
+            font-size: 12px;
+            color: #999;
+            font-weight: normal;
+        }
+
+        .book-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            max-width: 450px;
+            width: 90%;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .modal-content textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* ADD PAYMENT METHOD CSS HERE ↓↓↓ */
+.payment-method-section {
+    margin: 15px 0;
+}
+
+.payment-options {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    flex: 1;
+}
+
+.payment-option:hover {
+    background: #e8e8e8;
+}
+
+.payment-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.payment-option:has(input:checked) {
+    background: #e0d8ff;
+    border-color: #6c63ff;
+}
+
+.payment-option i {
+    color: #6c63ff;
+    font-size: 18px;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 28px;
+    color: #999;
+    transition: color 0.3s;
+}
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 28px;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .vendor-grid {
+                grid-template-columns: 1fr;
+            }
+            .service-tab {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <h2>🎉 EventSphere</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="my-bookings.html">My Bookings</a></li>
+            <li><a href="venue-booking.html">Venues</a></li>
+        </ul>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">✨ Hire Premium Vendors</h1>
+        <p class="page-subtitle">Choose from the best vendors for your dream event</p>
+
+        <div class="service-tabs" id="serviceTabs">
+            <button class="service-tab active" data-service="catering">🍽️ Catering (6)</button>
+            <button class="service-tab" data-service="decoration">🎨 Decoration (6)</button>
+            <button class="service-tab" data-service="photography">📸 Photography (6)</button>
+            <button class="service-tab" data-service="music">🎵 Music & DJ (6)</button>
+            <button class="service-tab" data-service="makeup">💄 Makeup (6)</button>
+            <button class="service-tab" data-service="photobooth">📷 Photo Booth (4)</button>
+            <button class="service-tab" data-service="transport">🚗 Transport (4)</button>
+            <button class="service-tab" data-service="cake">🎂 Cake & Desserts (4)</button>
+            <button class="service-tab" data-service="lighting">💡 Lighting (4)</button>
+            <button class="service-tab" data-service="security">🛡️ Security (3)</button>
+            <button class="service-tab" data-service="entertainment">🎭 Entertainment (4)</button>
+            <button class="service-tab" data-service="invitations">📧 Invitations (3)</button>
+        </div>
+
+        <div class="vendor-grid" id="vendorsGrid"></div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>📅 Confirm Booking</h3>
+        <p id="modalVendorName" style="margin: 10px 0; color: #6c63ff;"></p>
+        
+        <input type="date" id="bookingDate" placeholder="Select Event Date">
+        <textarea id="specialRequests" placeholder="Special requests (optional)"></textarea>
+        
+        <!-- ADD PAYMENT METHOD SECTION -->
+        <div class="payment-method-section">
+            <label style="font-weight: 600; display: block; margin-bottom: 10px;">Select Payment Method:</label>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="online" checked>
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Pay Online</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="cod">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Cash on Delivery</span>
+                </label>
+            </div>
+        </div>
+        
+        <button onclick="confirmBooking()" class="book-btn" style="margin-top: 15px;">✅ Confirm & Pay</button>
+    </div>
+</div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token) {
+            alert('Please login first');
+            window.location.href = 'login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../../index.html';
+        }
+
+        // COMPLETE VENDORS DATA WITH UNIQUE IMAGES FOR EACH
+        const vendors = {
+            catering: [
+                { id: 1, name: "Spice Garden Caterers", rating: 4.5, reviews: 128, price: 500, minGuests: 50, experience: "10+ years", description: "Best vegetarian & non-veg catering with authentic flavors", image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=500&h=220&fit=crop" },
+                { id: 2, name: "Royal Feast", rating: 4.8, reviews: 256, price: 750, minGuests: 100, experience: "15+ years", description: "Luxury catering for weddings and corporate events", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&h=220&fit=crop" },
+                { id: 3, name: "Grand Buffet", rating: 4.6, reviews: 89, price: 600, minGuests: 75, experience: "8+ years", description: "Multi-cuisine buffet specialists", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&h=220&fit=crop" },
+                { id: 4, name: "Elite Catering", rating: 4.9, reviews: 312, price: 900, minGuests: 150, experience: "20+ years", description: "5-star catering experience", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&h=220&fit=crop" },
+                { id: 5, name: "Flavours of India", rating: 4.4, reviews: 67, price: 450, minGuests: 40, experience: "6+ years", description: "Authentic Indian cuisine", image: "https://images.unsplash.com/photo-1505253758473-96b7015fcd40?w=500&h=220&fit=crop" },
+                { id: 6, name: "Continental Delights", rating: 4.7, reviews: 145, price: 680, minGuests: 60, experience: "12+ years", description: "Premium continental and fusion food", image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&h=220&fit=crop" }
+            ],
+            decoration: [
+                { id: 7, name: "Floral Dreams", rating: 4.7, reviews: 189, price: 75000, minGuests: 50, experience: "10+ years", description: "Beautiful floral decorations for all occasions", image: "https://images.pexels.com/photos/931177/pexels-photo-931177.jpeg?w=500&h=220&fit=crop" },
+                { id: 8, name: "Royal Decorators", rating: 4.9, reviews: 278, price: 100000, minGuests: 100, experience: "15+ years", description: "Premium decoration services with themed setups", image: "https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?w=500&h=220&fit=crop" },
+                { id: 9, name: "Elegant Events", rating: 4.6, reviews: 94, price: 55000, minGuests: 50, experience: "8+ years", description: "Modern and elegant decorations", image: "https://images.pexels.com/photos/3584982/pexels-photo-3584982.jpeg?w=500&h=220&fit=crop"},
+                { id: 10, name: "Magic Decor", rating: 4.8, reviews: 156, price: 85000, minGuests: 100, experience: "12+ years", description: "Theme-based magical decorations", image: "https://images.pexels.com/photos/3584982/pexels-photo-3584982.jpeg?w=500&h=220&fit=crop" },
+                { id: 11, name: "Traditional Touch", rating: 4.5, reviews: 78, price: 65000, minGuests: 75, experience: "10+ years", description: "Traditional Indian wedding decor", image: "https://images.pexels.com/photos/3182810/pexels-photo-3182810.jpeg?w=500&h=220&fit=crop" },
+                { id: 12, name: "Luxury Affairs", rating: 4.9, reviews: 203, price: 120000, minGuests: 150, experience: "18+ years", description: "Luxury decor for grand events", image: "https://images.pexels.com/photos/2253879/pexels-photo-2253879.jpeg?w=500&h=220&fit=crop" }
+            ],
+            photography: [
+                { id: 13, name: "Capture Moments", rating: 4.8, reviews: 234, price: 50000, minGuests: 50, experience: "10+ years", description: "Professional photography & videography", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&h=220&fit=crop" },
+                { id: 14, name: "Shutter Stories", rating: 4.6, reviews: 167, price: 45000, minGuests: 50, experience: "8+ years", description: "Candid photography specialists", image: "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?w=500&h=220&fit=crop" },
+                { id: 15, name: "Perfect Frame", rating: 4.9, reviews: 298, price: 70000, minGuests: 100, experience: "15+ years", description: "Award-winning photography team", image: "https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?w=500&h=220&fit=crop" },
+                { id: 16, name: "Wedding Wizards", rating: 4.7, reviews: 189, price: 60000, minGuests: 75, experience: "12+ years", description: "Specialized wedding photographers", image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500&h=220&fit=crop" },
+                { id: 17, name: "Candid Creators", rating: 4.8, reviews: 145, price: 55000, minGuests: 50, experience: "9+ years", description: "Natural and candid moments", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&h=220&fit=crop" },
+                { id: 18, name: "Royal Lens", rating: 4.9, reviews: 267, price: 80000, minGuests: 100, experience: "20+ years", description: "Royal photography experience", image: "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?w=500&h=220&fit=crop" }
+            ],
+            music: [
+                { id: 19, name: "Beat Masters DJ", rating: 4.7, reviews: 156, price: 30000, minGuests: 50, experience: "8+ years", description: "Professional DJ for parties and events", image: "https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?w=500&h=220&fit=crop" },
+                { id: 20, name: "Melody Band", rating: 4.5, reviews: 98, price: 50000, minGuests: 100, experience: "12+ years", description: "Live band for weddings and celebrations", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&h=220&fit=crop" },
+                { id: 21, name: "Rhythm House", rating: 4.8, reviews: 203, price: 45000, minGuests: 75, experience: "10+ years", description: "Professional sound system & DJ", image: "https://images.pexels.com/photos/1375732/pexels-photo-1375732.jpeg?w=500&h=220&fit=crop"},
+                { id: 22, name: "Classical Ensemble", rating: 4.9, reviews: 112, price: 60000, minGuests: 100, experience: "20+ years", description: "Traditional classical music", image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&h=220&fit=crop" },
+                { id: 24, name: "Sufi Nights", rating: 4.8, reviews: 89, price: 55000, minGuests: 100, experience: "15+ years", description: "Sufi and Qawwali performances", image: "https://images.pexels.com/photos/1427437/pexels-photo-1427437.jpeg?w=500&h=220&fit=crop" }
+            ],
+            makeup: [
+                { id: 25, name: "Glamour Studio", rating: 4.9, reviews: 267, price: 15000, minGuests: 1, experience: "10+ years", description: "Bridal & party makeup specialist", image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=500&h=220&fit=crop" },
+                { id: 26, name: "Artistry Makeovers", rating: 4.7, reviews: 189, price: 12000, minGuests: 1, experience: "8+ years", description: "Professional makeup artists for all events", image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500&h=220&fit=crop" },
+                { id: 27, name: "Bridal Bliss", rating: 4.9, reviews: 312, price: 25000, minGuests: 1, experience: "12+ years", description: "Premium bridal makeup packages", image: "https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=500&h=220&fit=crop" },
+                { id: 28, name: "Style Studio", rating: 4.6, reviews: 134, price: 10000, minGuests: 1, experience: "6+ years", description: "Hair and makeup for all occasions", image: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=500&h=220&fit=crop" },
+                { id: 29, name: "Royal Makeovers", rating: 4.8, reviews: 203, price: 20000, minGuests: 1, experience: "15+ years", description: "Royal bridal makeup experience", image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=500&h=220&fit=crop" },
+                { id: 30, name: "Glam & Go", rating: 4.5, reviews: 98, price: 8000, minGuests: 1, experience: "5+ years", description: "Quick and elegant makeup", image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=500&h=220&fit=crop" }
+            ],
+            photobooth: [
+                { id: 31, name: "FunClick PhotoBooth", rating: 4.8, reviews: 89, price: 15000, minGuests: 50, experience: "5+ years", description: "Digital photo booth with props", image: "https://images.pexels.com/photos/260447/pexels-photo-260447.jpeg?w=500&h=220&fit=crop"},
+                { id: 32, name: "Magic Mirror", rating: 4.7, reviews: 67, price: 20000, minGuests: 50, experience: "6+ years", description: "Interactive touch screen photo booth", image: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=500&h=220&fit=crop" },
+                { id: 33, name: "360 PhotoBooth", rating: 4.9, reviews: 112, price: 30000, minGuests: 100, experience: "4+ years", description: "360-degree video photo booth", image: "https://images.unsplash.com/photo-1574169208507-84376144848b?w=500&h=220&fit=crop" },
+                { id: 34, name: "Vintage Booth", rating: 4.6, reviews: 54, price: 18000, minGuests: 50, experience: "7+ years", description: "Vintage style photo booth", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&h=220&fit=crop" }
+            ],
+            transport: [
+                { id: 35, name: "Royal Rides", rating: 4.8, reviews: 156, price: 25000, minGuests: 10, experience: "12+ years", description: "Luxury car rentals for events", image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=500&h=220&fit=crop" },
+                { id: 36, name: "Guest Transfers", rating: 4.7, reviews: 98, price: 15000, minGuests: 20, experience: "8+ years", description: "Guest transportation services", image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&h=220&fit=crop" },
+                { id: 37, name: "Luxury Coaches", rating: 4.9, reviews: 87, price: 35000, minGuests: 30, experience: "15+ years", description: "Premium bus and coach rentals", image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=500&h=220&fit=crop" },
+                { id: 38, name: "Vintage Cars", rating: 4.8, reviews: 67, price: 40000, minGuests: 5, experience: "20+ years", description: "Vintage car rentals for weddings", image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=500&h=220&fit=crop" }
+            ],
+            cake: [
+                { id: 39, name: "Sweet Creations", rating: 4.9, reviews: 234, price: 8000, minGuests: 50, experience: "10+ years", description: "Custom designed cakes for all occasions", image: "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=500&h=220&fit=crop" },
+                { id: 40, name: "Cake Art Studio", rating: 4.8, reviews: 178, price: 12000, minGuests: 75, experience: "12+ years", description: "Artistic and delicious wedding cakes", image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=500&h=220&fit=crop" },
+                { id: 41, name: "Dessert Delights", rating: 4.7, reviews: 145, price: 6000, minGuests: 40, experience: "8+ years", description: "Wide range of desserts and pastries", image: "https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg?w=500&h=220&fit=crop" },
+                { id: 42, name: "Royal Cakes", rating: 4.9, reviews: 289, price: 15000, minGuests: 100, experience: "15+ years", description: "Premium tiered wedding cakes", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&h=220&fit=crop" }
+            ],
+            lighting: [
+                { id: 43, name: "Brilliant Lights", rating: 4.8, reviews: 167, price: 25000, minGuests: 50, experience: "10+ years", description: "Professional event lighting solutions", image: "https://images.pexels.com/photos/1366633/pexels-photo-1366633.jpeg?w=500&h=220&fit=crop" },
+                { id: 44, name: "Royal Illuminations", rating: 4.9, reviews: 203, price: 40000, minGuests: 100, experience: "15+ years", description: "Luxury lighting for grand events", image: "https://images.pexels.com/photos/693656/pexels-photo-693656.jpeg?w=500&h=220&fit=crop" },
+                { id: 45, name: "LED Magic", rating: 4.7, reviews: 98, price: 20000, minGuests: 50, experience: "8+ years", description: "Colorful LED lighting effects", image: "https://images.pexels.com/photos/633409/pexels-photo-633409.jpeg?w=500&h=220&fit=crop" },
+                { id: 46, name: "Spotlight Events", rating: 4.8, reviews: 134, price: 35000, minGuests: 75, experience: "12+ years", description: "Dramatic spotlight effects", image: "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?w=500&h=220&fit=crop"}
+            ],
+            security: [
+                { id: 47, name: "SafeGuard Security", rating: 4.9, reviews: 156, price: 20000, minGuests: 100, experience: "15+ years", description: "Professional security for events", image: "https://images.pexels.com/photos/7007359/pexels-photo-7007359.jpeg?w=500&h=220&fit=crop"},
+                { id: 48, name: "Elite Protection", rating: 4.8, reviews: 112, price: 30000, minGuests: 200, experience: "20+ years", description: "VIP and celebrity protection", image: "https://images.pexels.com/photos/839466/pexels-photo-839466.jpeg?w=500&h=220&fit=crop" },
+                { id: 49, name: "Event Shield", rating: 4.7, reviews: 89, price: 15000, minGuests: 100, experience: "10+ years", description: "Crowd management and security", image: "https://images.pexels.com/photos/1535269/pexels-photo-1535269.jpeg?w=500&h=220&fit=crop" }
+            ],
+            entertainment: [
+                { id: 50, name: "Magic Show Masters", rating: 4.8, reviews: 123, price: 25000, minGuests: 50, experience: "12+ years", description: "Amazing magic shows for all ages", image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=500&h=220&fit=crop" },
+                { id: 51, name: "Dance Troop India", rating: 4.9, reviews: 189, price: 40000, minGuests: 100, experience: "10+ years", description: "Professional dance performances", image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&h=220&fit=crop" },
+                { id: 52, name: "Fire Show Artists", rating: 4.7, reviews: 78, price: 35000, minGuests: 100, experience: "8+ years", description: "Spectacular fire shows", image: "https://images.unsplash.com/photo-1532777946373-b0d3e2c03bc6?w=500&h=220&fit=crop" },
+                { id: 53, name: "Celebrity Mimicry", rating: 4.6, reviews: 67, price: 20000, minGuests: 50, experience: "7+ years", description: "Celebrity mimicry and comedy", image: "https://images.pexels.com/photos/705265/pexels-photo-705265.jpeg?w=500&h=220&fit=crop" }
+            ],
+            invitations: [
+                { id: 54, name: "Digital Cards Pro", rating: 4.8, reviews: 145, price: 5000, minGuests: 50, experience: "6+ years", description: "Beautiful digital invitations", image: "https://images.pexels.com/photos/2252945/pexels-photo-2252945.jpeg?w=500&h=220&fit=crop" },
+                { id: 55, name: "Printed Perfection", rating: 4.9, reviews: 189, price: 15000, minGuests: 100, experience: "15+ years", description: "Premium printed invitations", image: "https://images.pexels.com/photos/1169005/pexels-photo-1169005.jpeg?w=500&h=220&fit=crop" },
+                { id: 56, name: "Elegant Invites", rating: 4.7, reviews: 98, price: 8000, minGuests: 75, experience: "8+ years", description: "Custom designed invitation cards", image: "https://images.pexels.com/photos/1169005/pexels-photo-1169005.jpeg?w=500&h=220&fit=crop" }
+            ]
+        };
+
+                let selectedVendor = null;
+        let currentService = 'catering';
+
+        const serviceNames = {
+            catering: 'Catering', 
+            decoration: 'Decoration', 
+            photography: 'Photography',
+            music: 'Music & DJ', 
+            makeup: 'Makeup Artist', 
+            photobooth: 'Photo Booth',
+            transport: 'Transport', 
+            cake: 'Cake & Desserts', 
+            lighting: 'Lighting',
+            security: 'Security', 
+            entertainment: 'Entertainment', 
+            invitations: 'Invitations'
+        };
+
+        const serviceEmoji = {
+            catering: '🍽️', 
+            decoration: '🎨', 
+            photography: '📸',
+            music: '🎵', 
+            makeup: '💄', 
+            photobooth: '📷',
+            transport: '🚗', 
+            cake: '🎂', 
+            lighting: '💡',
+            security: '🛡️', 
+            entertainment: '🎭', 
+            invitations: '📧'
+        };
+
+        function displayVendors(service) {
+            const grid = document.getElementById('vendorsGrid');
+            const vendorList = vendors[service] || [];
+
+            if (vendorList.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: white;">No vendors available for this service.</p>';
+                return;
+            }
+
+            grid.innerHTML = vendorList.map(vendor => `
+                <div class="vendor-card">
+                    <div class="vendor-image">
+                        <img src="${vendor.image}" alt="${vendor.name}" onerror="this.src='https://via.placeholder.com/500x220?text=${encodeURIComponent(vendor.name)}'">
+                        <div class="vendor-badge">⭐ ${vendor.rating}</div>
+                    </div>
+                    <div class="vendor-info">
+                        <h3>${serviceEmoji[service]} ${vendor.name}</h3>
+                        <div class="vendor-description">${vendor.description}</div>
+                        <div class="vendor-rating">
+                            ${'⭐'.repeat(Math.floor(vendor.rating))} ${vendor.rating} <span class="reviews">(${vendor.reviews} reviews)</span>
+                        </div>
+                        <div class="vendor-details">
+                            <div class="vendor-detail-item">
+                                <i class="fa-solid fa-clock"></i>
+                                <span>${vendor.experience}</span>
+                            </div>
+                            <div class="vendor-detail-item">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Min ${vendor.minGuests} guests</span>
+                            </div>
+                            <div class="vendor-detail-item">
+                                <i class="fa-solid fa-calendar"></i>
+                                <span>Available</span>
+                            </div>
+                        </div>
+                        <div class="vendor-price">₹${vendor.price.toLocaleString()} <small>starting price</small></div>
+                        <button class="book-btn" onclick="openBookingModal(${vendor.id}, '${service}')">📅 Hire Now →</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openBookingModal(vendorId, service) {
+            selectedVendor = vendors[service].find(v => v.id === vendorId);
+            selectedVendor.service = service;
+            document.getElementById('modalVendorName').innerHTML = `<strong>${selectedVendor.name}</strong><br>${serviceNames[service]} Service`;
+            document.getElementById('bookingModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.getElementById('bookingDate').value = '';
+            document.getElementById('specialRequests').value = '';
+        }
+
+        async function confirmBooking() {
+    const bookingDate = document.getElementById('bookingDate').value;
+    const specialRequests = document.getElementById('specialRequests').value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const token = localStorage.getItem('token');
+    
+    if (!bookingDate) {
+        alert('Please select a booking date');
+        return;
+    }
+
+    // For Cash on Delivery - Save directly without payment
+    if (paymentMethod === 'cod') {
+
+    const response = await fetch(
+        'http://localhost:5000/api/bookings/create-vendor',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                vendor_id: selectedVendor.id,
+                vendor_name: selectedVendor.name,
+                service_type: serviceNames[selectedVendor.service],
+                booking_date: bookingDate,
+                amount: selectedVendor.price,
+                payment_method: 'cash',
+                special_requests: specialRequests
+            })
+        }
+    );
+
+    const result = await response.json();
+
+    if (response.ok) {
+        alert('✅ Vendor booking submitted successfully');
+        closeModal();
+        window.location.href = 'my-bookings.html';
+    } else {
+        alert(result.message || 'Booking failed');
+    }
+
+    return;
+}
+    // For Online Payment - Proceed with Razorpay
+    try {
+        const orderResponse = await fetch('http://localhost:5000/api/payments/create-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                amount: selectedVendor.price,
+                currency: 'INR',
+                receipt: `vendor_booking_${Date.now()}`,
+                notes: {
+                    vendor_name: selectedVendor.name,
+                    service_type: serviceNames[selectedVendor.service],
+                    booking_date: bookingDate
+                }
+            })
+        });
+        
+        const orderData = await orderResponse.json();
+        
+        if (!orderData.success) {
+            throw new Error(orderData.message || 'Failed to create payment order');
+        }
+        
+        const options = {
+            key: orderData.key_id,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: 'EventSphere',
+            description: `${serviceNames[selectedVendor.service]}: ${selectedVendor.name}`,
+            order_id: orderData.order_id,
+            handler: async function(response) {
+                const verifyResponse = await fetch('http://localhost:5000/api/payments/verify-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                    })
+                });
+                
+                const verifyResult = await verifyResponse.json();
+                
+                if (verifyResult.success) {
+                    const bookingResponse = await fetch(
+    'http://localhost:5000/api/bookings/create-vendor',
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            vendor_id: selectedVendor.id,
+            vendor_name: selectedVendor.name,
+            service_type: serviceNames[selectedVendor.service],
+            booking_date: bookingDate,
+            amount: selectedVendor.price,
+            payment_method: 'online',
+            special_requests: specialRequests
+        })
+    }
+);
+
+const bookingResult = await bookingResponse.json();
+
+if (!bookingResponse.ok) {
+    alert(bookingResult.message || 'Booking save failed');
+    return;
+}
+                    
+                    alert(`✅ Payment successful! "${selectedVendor.name}" is confirmed for ${bookingDate}!`);
+                    closeModal();
+                    window.location.href = 'my-bookings.html';
+                } else {
+                    alert('Payment verification failed. Please contact support.');
+                }
+            },
+            prefill: {
+                name: user.name,
+                email: user.email,
+            },
+            theme: {
+                color: '#6c63ff'
+            }
+        };
+        
+        const rzp = new Razorpay(options);
+        rzp.open();
+        
+    } catch (error) {
+        console.error('Payment error:', error);
+        alert('Failed to initiate payment. Please try again. Error: ' + error.message);
+    }
+}
+
+// Tab switching
+document.querySelectorAll('.service-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentService = tab.dataset.service;
+        displayVendors(currentService);
+    });
+});
+
+// Close modal on outside click
+window.onclick = function(event) {
+    const modal = document.getElementById('bookingModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Initial display
+displayVendors('catering');
+</script>
+</body>
+</html>

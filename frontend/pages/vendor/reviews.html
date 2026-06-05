@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews - Vendor | EventSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; }
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h2 { color: #6c63ff; }
+        .nav-links { display: flex; list-style: none; gap: 25px; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 500; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        .rating-summary { background: white; border-radius: 20px; padding: 30px; margin-bottom: 30px; display: flex; gap: 40px; align-items: center; flex-wrap: wrap; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .avg-rating { text-align: center; }
+        .avg-rating .score { font-size: 64px; font-weight: bold; color: #ffc107; }
+        .avg-rating .stars { font-size: 24px; color: #ffc107; }
+        .review-card { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .review-header { display: flex; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .reviewer-name { font-weight: 600; color: #333; }
+        .review-rating { color: #ffc107; }
+        .review-date { color: #999; font-size: 12px; margin-top: 5px; }
+        .review-comment { color: #666; line-height: 1.6; margin-top: 10px; }
+        .no-reviews { text-align: center; padding: 50px; background: white; border-radius: 15px; color: #999; }
+        .loading { text-align: center; padding: 50px; background: white; border-radius: 15px; color: #999; }
+        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><h2>🎉 EventSphere Vendor</h2></div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="my-services.html">My Services</a></li>
+            <li><a href="bookings.html">Bookings</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="earnings.html">Earnings</a></li>
+            <li><a href="profile.html">Profile</a></li>
+        </ul>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 30px;"><i class="fa-solid fa-star"></i> Customer Reviews</h1>
+        <div id="reviewsList" class="loading">Loading reviews...</div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!token || user.role !== 'vendor') {
+            window.location.href = '../customer/login.html';
+        }
+        
+        function logout() { localStorage.clear(); window.location.href = '../../index.html'; }
+        
+        async function loadReviews() {
+            try {
+                console.log("Fetching reviews for vendor ID:", user.id);
+                
+                const response = await fetch(`http://localhost:5000/api/reviews/vendor/${user.id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const reviews = await response.json();
+                    console.log("Reviews received:", reviews);
+                    displayReviews(reviews);
+                } else {
+                    document.getElementById('reviewsList').innerHTML = '<div class="no-reviews">Failed to load reviews. Please try again.</div>';
+                }
+            } catch(error) {
+                console.error("Error:", error);
+                document.getElementById('reviewsList').innerHTML = '<div class="no-reviews">Error loading reviews. Make sure backend is running.</div>';
+            }
+        }
+        
+        function displayReviews(reviews) {
+            const container = document.getElementById('reviewsList');
+            
+            if (!reviews || reviews.length === 0) {
+                container.innerHTML = '<div class="no-reviews">No reviews yet. Complete bookings to get customer feedback.</div>';
+                return;
+            }
+            
+            // Calculate average rating
+            let totalRating = 0;
+            reviews.forEach(r => totalRating += r.rating);
+            const avgRating = (totalRating / reviews.length).toFixed(1);
+            const fullStars = Math.floor(avgRating);
+            const emptyStars = 5 - fullStars;
+            
+            // Show rating summary at top
+            const ratingSummary = `
+                <div class="rating-summary">
+                    <div class="avg-rating">
+                        <div class="score">${avgRating}</div>
+                        <div class="stars">${'★'.repeat(fullStars)}${'☆'.repeat(emptyStars)}</div>
+                        <div>${reviews.length} review${reviews.length !== 1 ? 's' : ''}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Show individual reviews
+            const reviewsHtml = reviews.map(r => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <span class="reviewer-name"><i class="fa-solid fa-user"></i> ${r.customer_name || 'Customer'}</span>
+                        <span class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                    </div>
+                    <div class="review-date"><i class="fa-solid fa-calendar"></i> ${new Date(r.created_at).toLocaleDateString()}</div>
+                    <div class="review-comment">"${r.comment}"</div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = ratingSummary + reviewsHtml;
+        }
+        
+        loadReviews();
+    </script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Venue - EventSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f2f5;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo h2 {
+            color: #6c63ff;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .search-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .search-form input, .search-form select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background: #6c63ff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .venue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .venue-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .venue-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .venue-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .venue-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .venue-card:hover .venue-image img {
+            transform: scale(1.05);
+        }
+
+        .venue-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #6c63ff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .venue-info {
+            padding: 20px;
+        }
+
+        .venue-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .venue-info p {
+            color: #666;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .venue-info i {
+            width: 20px;
+            color: #6c63ff;
+            margin-right: 8px;
+        }
+
+        .venue-price {
+            font-size: 24px;
+            color: #6c63ff;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .venue-price small {
+            font-size: 12px;
+            color: #999;
+            font-weight: normal;
+        }
+
+        .book-btn {
+            width: 100%;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .book-btn:hover {
+            background: #5a52d5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+        }
+
+        .modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.modal-content textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ADD THIS PAYMENT METHOD CSS ↓↓↓ */
+.payment-method-section {
+    margin: 15px 0;
+}
+
+.payment-options {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    flex: 1;
+}
+
+.payment-option:hover {
+    background: #e8e8e8;
+}
+
+.payment-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.payment-option:has(input:checked) {
+    background: #e0d8ff;
+    border-color: #6c63ff;
+}
+
+.payment-option i {
+    color: #6c63ff;
+    font-size: 18px;
+}
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .venue-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <h2>🎉 EventSphere</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="my-bookings.html">My Bookings</a></li>
+        </ul>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">🏢 Find & Book Your Perfect Venue</h1>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <form class="search-form" id="searchForm">
+                <input type="text" id="searchLocation" placeholder="📍 City (e.g., Hyderabad, Mumbai)">
+                <input type="number" id="searchCapacity" placeholder="👥 Minimum Capacity">
+                <button type="submit" class="search-btn">🔍 Search Venues</button>
+            </form>
+        </div>
+
+        <!-- Venues Grid -->
+        <div class="venue-grid" id="venuesGrid">
+            <!-- Venues will be loaded here -->
+        </div>
+    </div>
+
+<!-- Booking Modal -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>📅 Book Venue</h3>
+        <p id="modalVenueName" style="margin: 10px 0; color: #6c63ff;"></p>
+        
+        <label>Select Date:</label>
+        <input type="date" id="bookingDate" placeholder="Select Date" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:6px;">
+        
+        <label>Special Requests (optional):</label>
+        <textarea id="specialRequests" placeholder="e.g., Need vegetarian food, parking required, etc." style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:6px; resize:vertical; min-height:80px;"></textarea>
+        
+        <!-- ADD PAYMENT METHOD SECTION ↓↓↓ -->
+        <div class="payment-method-section">
+            <label style="font-weight: 600; display: block; margin-bottom: 10px;">Select Payment Method:</label>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="online" checked>
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Pay Online</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="cod">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Cash on Delivery</span>
+                </label>
+            </div>
+        </div>
+        
+        <button onclick="confirmBooking()" class="book-btn" style="margin-top: 15px; width:100%;">✅ Confirm Booking</button>
+    </div>
+</div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token) {
+            alert('Please login first');
+            window.location.href = 'login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../../index.html';
+        }
+
+        // Venues data with image URLs (using free stock images)
+        const venues = [
+            { 
+                id: 1, 
+                name: "Grand Hyatt Regency", 
+                location: "Hyderabad", 
+                capacity: 1000, 
+                price: 250000, 
+                amenities: "Parking, WiFi, AC, Pool",
+                image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop",
+                rating: 4.8
+            },
+            { 
+                id: 2, 
+                name: "The Westin", 
+                location: "Mumbai", 
+                capacity: 800, 
+                price: 200000, 
+                amenities: "Pool, Parking, WiFi, Spa",
+                image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=500&h=300&fit=crop",
+                rating: 4.6
+            },
+            { 
+                id: 3, 
+                name: "JW Marriott", 
+                location: "Delhi", 
+                capacity: 1200, 
+                price: 300000, 
+                amenities: "Luxury Rooms, Parking, WiFi",
+                image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=500&h=300&fit=crop",
+                rating: 4.9
+            },
+            { 
+                id: 4, 
+                name: "Taj Palace", 
+                location: "Delhi", 
+                capacity: 1500, 
+                price: 400000, 
+                amenities: "5 Star, Pool, Spa, Restaurant",
+                image: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=500&h=300&fit=crop",
+                rating: 4.9
+            },
+            { 
+                id: 5, 
+                name: "Novotel", 
+                location: "Hyderabad", 
+                capacity: 500, 
+                price: 150000, 
+                amenities: "Parking, WiFi, AC, Gym",
+                image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&h=300&fit=crop",
+                rating: 4.5
+            },
+            { 
+                id: 6, 
+                name: "Radisson Blu", 
+                location: "Bangalore", 
+                capacity: 700, 
+                price: 180000, 
+                amenities: "Parking, WiFi, Pool",
+                image: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=500&h=300&fit=crop",
+                rating: 4.7
+            },
+            { 
+                id: 7, 
+                name: "Beachside Resort", 
+                location: "Goa", 
+                capacity: 600, 
+                price: 220000, 
+                amenities: "Beach View, Pool, WiFi",
+                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&h=300&fit=crop",
+                rating: 4.8
+            },
+            { 
+                id: 8, 
+                name: "Royal Garden Palace", 
+                location: "Chennai", 
+                capacity: 900, 
+                price: 280000, 
+                amenities: "Garden, Parking, AC",
+                image: "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?w=500&h=300&fit=crop",
+                rating: 4.6
+            }
+        ];
+
+        let selectedVenue = null;
+
+        function displayVenues(venuesToShow) {
+            const grid = document.getElementById('venuesGrid');
+            if (venuesToShow.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">❌ No venues found. Try different search criteria.</p>';
+                return;
+            }
+
+            grid.innerHTML = venuesToShow.map(venue => `
+                <div class="venue-card">
+                    <div class="venue-image">
+                        <img src="${venue.image}" alt="${venue.name}" onerror="this.src='https://via.placeholder.com/500x300?text=${venue.name}'">
+                        <div class="venue-badge">⭐ ${venue.rating}</div>
+                    </div>
+                    <div class="venue-info">
+                        <h3>${venue.name}</h3>
+                        <p><i class="fa-solid fa-location-dot"></i> ${venue.location}</p>
+                        <p><i class="fa-solid fa-users"></i> Capacity: ${venue.capacity.toLocaleString()} guests</p>
+                        <p><i class="fa-solid fa-circle-info"></i> ${venue.amenities}</p>
+                        <div class="venue-price">₹${venue.price.toLocaleString()} <small>+ taxes</small></div>
+                        <button class="book-btn" onclick="openBookingModal(${venue.id})">📅 Book Now</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openBookingModal(venueId) {
+    selectedVenue = venues.find(v => v.id === venueId);
+    document.getElementById('modalVenueName').innerHTML = `<strong>${selectedVenue.name}</strong><br>📍 ${selectedVenue.location}`;
+    document.getElementById('bookingModal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+    document.getElementById('bookingDate').value = '';
+}
+
+// REPLACE YOUR EXISTING confirmBooking WITH THIS ONE
+async function confirmBooking() {
+    const bookingDate = document.getElementById('bookingDate').value;
+    const specialRequests = document.getElementById('specialRequests').value;
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const token = localStorage.getItem('token');
+    
+    if (!bookingDate) {
+        alert('Please select a booking date');
+        return;
+    }
+
+    // For Cash on Delivery - Save directly without payment
+    // For Cash on Delivery - Save to DATABASE
+if (paymentMethod === 'cod') {
+    try {
+        const response = await fetch('http://localhost:5000/api/bookings/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                venue_id: selectedVenue.id,
+                venue_name: selectedVenue.name,
+                booking_date: bookingDate,
+                amount: selectedVenue.price,
+                payment_method: 'cash',
+                special_requests: specialRequests
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(`✅ Booking confirmed! Booking ID: ${result.booking_id}\n\nYou will pay ₹${selectedVenue.price.toLocaleString()} in cash at the venue.\n\nAdmin will confirm your booking soon.`);
+            closeModal();
+            window.location.href = 'my-bookings.html';
+        } else {
+            alert('Booking failed: ' + result.message);
+        }
+    } catch(error) {
+        console.error('Error:', error);
+        alert('Server error. Please try again.');
+    }
+    return;
+}
+
+    // For Online Payment - Proceed with Razorpay
+    try {
+        // Create Razorpay order
+        const orderResponse = await fetch('http://localhost:5000/api/payments/create-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                amount: selectedVenue.price,
+                currency: 'INR',
+                receipt: `venue_booking_${Date.now()}`,
+                notes: {
+                    venue_name: selectedVenue.name,
+                    booking_date: bookingDate
+                }
+            })
+        });
+        
+        const orderData = await orderResponse.json();
+        
+        if (!orderData.success) {
+            throw new Error('Failed to create payment order');
+        }
+        
+        // Open Razorpay Checkout
+        const options = {
+            key: orderData.key_id,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: 'EventSphere',
+            description: `Venue Booking: ${selectedVenue.name}`,
+            order_id: orderData.order_id,
+            handler: async function(response) {
+                // Verify payment
+                const verifyResponse = await fetch('http://localhost:5000/api/payments/verify-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                    })
+                });
+                
+                const verifyResult = await verifyResponse.json();
+                
+                if (verifyResult.success) {
+                    // Save booking after successful payment
+                    let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                    bookings.push({
+                        id: Date.now(),
+                        venue_id: selectedVenue.id,
+                        venue_name: selectedVenue.name,
+                        venue_location: selectedVenue.location,
+                        booking_date: bookingDate,
+                        special_requests: specialRequests,
+                        user_id: user.id,
+                        type: 'venue',
+                        status: 'confirmed',
+                        payment_method: 'online',
+                        payment_status: 'paid',
+                        price: selectedVenue.price,
+                        payment_id: response.razorpay_payment_id,
+                        booked_on: new Date().toISOString()
+                    });
+                    localStorage.setItem('bookings', JSON.stringify(bookings));
+                    
+                    alert(`✅ Payment successful! Your venue "${selectedVenue.name}" is confirmed for ${bookingDate}!`);
+                    closeModal();
+                    window.location.href = 'my-bookings.html';
+                } else {
+                    alert('Payment verification failed. Please contact support.');
+                }
+            },
+            prefill: {
+                name: user.name,
+                email: user.email,
+            },
+            theme: {
+                color: '#6c63ff'
+            }
+        };
+        
+        const rzp = new Razorpay(options);
+        rzp.open();
+        
+    } catch (error) {
+        console.error('Payment error:', error);
+        alert('Failed to initiate payment. Please try again.');
+    }
+}
+
+document.getElementById('searchForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const location = document.getElementById('searchLocation').value.toLowerCase();
+    const capacity = document.getElementById('searchCapacity').value;
+
+    let filtered = [...venues];
+    if (location) {
+        filtered = filtered.filter(v => v.location.toLowerCase().includes(location));
+    }
+    if (capacity) {
+        filtered = filtered.filter(v => v.capacity >= parseInt(capacity));
+    }
+    displayVenues(filtered);
+});
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('bookingModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Initial display
+displayVenues(venues);
+    </script>
+</body>
+</html>

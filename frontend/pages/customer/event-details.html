@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Event Details - EventSphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; background: #f0f2f5; }
+.navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
+.logo h2 { color: #6c63ff; }
+.nav-links { display: flex; list-style: none; gap: 30px; }
+.nav-links a { text-decoration: none; color: #333; }
+.logout-btn { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+.container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+.event-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; }
+.event-details-card { background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; }
+.bookings-list { background: white; border-radius: 12px; padding: 30px; }
+.booking-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+.btn-back { background: #6c63ff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="logo"><h2>🎉 EventSphere</h2></div><ul class="nav-links"><li><a href="dashboard.html">Dashboard</a></li><li><a href="my-bookings.html">My Bookings</a></li></ul><button onclick="logout()" class="logout-btn">Logout</button></nav>
+<div class="container"><div class="event-header" id="eventHeader">Loading event details...</div>
+<div class="event-details-card"><h3>Event Information</h3><div id="eventInfo"></div></div>
+<div class="bookings-list"><h3>Bookings for this Event</h3><div id="bookingsList">Loading...</div></div>
+<button class="btn-back" onclick="goBack()">← Back to Dashboard</button></div>
+<script>const user = JSON.parse(localStorage.getItem('user')||'{}'); const token = localStorage.getItem('token');
+if(!token){window.location.href='login.html';}
+function logout(){localStorage.clear(); window.location.href='../../index.html';}
+function goBack(){window.location.href='dashboard.html';}
+const urlParams=new URLSearchParams(window.location.search); const eventId=urlParams.get('id');
+if(eventId){document.getElementById('eventHeader').innerHTML=`<h1>Event #${eventId}</h1>`;}
+else{document.getElementById('eventHeader').innerHTML='<h1>Event Details</h1>';}
+</script></body></html>

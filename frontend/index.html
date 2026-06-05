@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventSphere - Plan Your Dream Event</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo h2 {
+            color: #6c63ff;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6c63ff;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .login-btn, .register-btn, .dashboard-btn {
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 2px solid #6c63ff;
+            color: #6c63ff;
+        }
+
+        .login-btn:hover {
+            background: #6c63ff;
+            color: white;
+        }
+
+        .register-btn {
+            background: #6c63ff;
+            color: white;
+            border: 2px solid #6c63ff;
+        }
+
+        .register-btn:hover {
+            background: #5a52d5;
+        }
+
+        .dashboard-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .dashboard-btn:hover {
+            background: #218838;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .user-welcome {
+            color: #6c63ff;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-image {
+            flex: 1;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .primary-btn, .secondary-btn {
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 10px 0 0;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .primary-btn {
+            background: white;
+            color: #6c63ff;
+        }
+
+        .primary-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .secondary-btn:hover {
+            background: white;
+            color: #6c63ff;
+        }
+
+        /* Sections */
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin: 60px 0 40px;
+            color: #333;
+        }
+
+        .category-grid, .service-grid, .venue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .category-card, .service-card, .venue-card {
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            overflow: hidden;
+        }
+
+        .category-card:hover, .service-card:hover, .venue-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .category-card h3 {
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .service-card {
+            padding: 30px;
+        }
+
+        .service-card i {
+            font-size: 48px;
+            color: #6c63ff;
+            margin-bottom: 15px;
+        }
+
+        .service-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .service-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .venue-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .venue-card h3 {
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        .venue-card button {
+            margin-bottom: 20px;
+            padding: 8px 20px;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                flex-direction: column;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero-image img {
+                height: 250px;
+            }
+            .category-card img {
+                height: 150px;
+            }
+            .venue-card img {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h2>🎉 EventSphere</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#venues">Venues</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+            <div class="nav-buttons" id="navButtons">
+                <!-- Dynamic buttons -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Plan Your Dream Event With Ease</h1>
+                <p>Book venues, catering, decoration, photography, makeup artists and entertainment services all in one place.</p>
+                <div class="hero-buttons" id="heroButtons">
+                    <!-- Dynamic buttons -->
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/hero/wedding-hero.jpg" alt="Wedding Event" onerror="this.src='https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?w=600&h=400'">
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENT CATEGORIES -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">📌 Event Categories</h2>
+            <div class="category-grid">
+                <div class="category-card"><img src="images/categories/wedding.jpg" alt="Wedding" onerror="this.src='https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?w=400&h=250'"><h3>💍 Wedding</h3></div>
+                <div class="category-card"><img src="images/categories/birthday.jpg" alt="Birthday" onerror="this.src='https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg?w=400&h=250'"><h3>🎂 Birthday</h3></div>
+                <div class="category-card"><img src="images/categories/engagement.jpg" alt="Engagement" onerror="this.src='https://images.pexels.com/photos/2253879/pexels-photo-2253879.jpeg?w=400&h=250'"><h3>💕 Engagement</h3></div>
+                <div class="category-card"><img src="images/categories/reception.jpg" alt="Reception" onerror="this.src='https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?w=400&h=250'"><h3>🥂 Reception</h3></div>
+                <div class="category-card"><img src="images/categories/corporate.jpg" alt="Corporate" onerror="this.src='https://images.pexels.com/photos/3184460/pexels-photo-3184460.jpeg?w=400&h=250'"><h3>💼 Corporate</h3></div>
+                <div class="category-card"><img src="images/categories/babyshower.jpg" alt="Baby Shower" onerror="this.src='https://images.pexels.com/photos/2087022/pexels-photo-2087022.jpeg?w=400&h=250'"><h3>👶 Baby Shower</h3></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">🛠️ Our Services</h2>
+            <div class="service-grid">
+                <div class="service-card"><i class="fa-solid fa-hotel"></i><h3>Venue Booking</h3><p>Find perfect venues</p></div>
+                <div class="service-card"><i class="fa-solid fa-utensils"></i><h3>Catering</h3><p>Delicious food</p></div>
+                <div class="service-card"><i class="fa-solid fa-camera"></i><h3>Photography</h3><p>Capture memories</p></div>
+                <div class="service-card"><i class="fa-solid fa-palette"></i><h3>Decoration</h3><p>Beautiful decor</p></div>
+                <div class="service-card"><i class="fa-solid fa-music"></i><h3>DJ & Music</h3><p>Entertainment</p></div>
+                <div class="service-card"><i class="fa-solid fa-wand-magic-sparkles"></i><h3>Makeup Artist</h3><p>Look your best</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED VENUES -->
+    <section class="venues" id="venues">
+        <div class="container">
+            <h2 class="section-title">🏆 Featured Venues</h2>
+            <div class="venue-grid">
+                <div class="venue-card"><img src="images/venues/resort.jpg" alt="Resort" onerror="this.src='https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?w=400&h=250'"><h3>🌴 Luxury Resort</h3><button onclick="handleVenueClick()">Book Now →</button></div>
+                <div class="venue-card"><img src="images/venues/banquet.jpg" alt="Banquet" onerror="this.src='https://images.pexels.com/photos/261481/pexels-photo-261481.jpeg?w=400&h=250'"><h3>🏛️ Banquet Hall</h3><button onclick="handleVenueClick()">Book Now →</button></div>
+                <div class="venue-card"><img src="images/venues/garden.jpg" alt="Garden" onerror="this.src='https://images.pexels.com/photos/286977/pexels-photo-286977.jpeg?w=400&h=250'"><h3>🌺 Garden Venue</h3><button onclick="handleVenueClick()">Book Now →</button></div>
+                <div class="venue-card"><img src="images/venues/convention.jpg" alt="Convention" onerror="this.src='https://images.pexels.com/photos/260689/pexels-photo-260689.jpeg?w=400&h=250'"><h3>🏢 Convention Center</h3><button onclick="handleVenueClick()">Book Now →</button></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <h2>EventSphere</h2>
+            <p>Your complete event planning solution.</p>
+            <p style="margin-top: 20px;">© 2024 EventSphere. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.15)';
+            } else {
+                navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            }
+        });
+
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const isLoggedIn = token && user.name;
+
+        const navButtons = document.getElementById('navButtons');
+        const heroButtons = document.getElementById('heroButtons');
+
+        if (isLoggedIn) {
+            let dashboardLink = '';
+            if (user.role === 'admin') {
+                dashboardLink = 'pages/admin/dashboard.html';
+            } else if (user.role === 'vendor') {
+                dashboardLink = 'pages/vendor/dashboard.html';
+            } else {
+                dashboardLink = 'pages/customer/dashboard.html';
+            }
+            
+            navButtons.innerHTML = `
+                <span class="user-welcome">👋 Hi, ${user.name}</span>
+                <a href="${dashboardLink}" class="dashboard-btn">📊 Dashboard</a>
+                <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+            `;
+            heroButtons.innerHTML = `
+                <a href="${dashboardLink}" class="primary-btn">📊 Go to Dashboard</a>
+                <a href="pages/customer/venue-booking.html" class="secondary-btn">🏢 Explore Venues</a>
+            `;
+        } else {
+            navButtons.innerHTML = `
+                <a href="pages/customer/login.html" class="login-btn">🔐 Login</a>
+                <a href="pages/customer/register.html" class="register-btn">📝 Register</a>
+            `;
+            heroButtons.innerHTML = `
+                <a href="pages/customer/login.html" class="primary-btn">🚀 Start Planning</a>
+                <a href="pages/customer/venue-booking.html" class="secondary-btn">🏢 Explore Venues</a>
+            `;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Logged out successfully!');
+            window.location.href = 'index.html';
+        }
+
+        function handleVenueClick() {
+            if (isLoggedIn) {
+                window.location.href = 'pages/customer/venue-booking.html';
+            } else {
+                alert('Please login first to book venues');
+                window.location.href = 'pages/customer/login.html';
+            }
+        }
+    </script>
+</body>
+</html>

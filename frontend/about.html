@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - EventSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo h2 {
+            color: #6c63ff;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #6c63ff;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .login-btn, .register-btn, .dashboard-btn {
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 2px solid #6c63ff;
+            color: #6c63ff;
+        }
+
+        .login-btn:hover {
+            background: #6c63ff;
+            color: white;
+        }
+
+        .register-btn {
+            background: #6c63ff;
+            color: white;
+            border: 2px solid #6c63ff;
+        }
+
+        .register-btn:hover {
+            background: #5a52d5;
+        }
+
+        .dashboard-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .user-welcome {
+            color: #6c63ff;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .about-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+
+        .about-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .about-hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Mission Section */
+        .mission-section {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .mission-text h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .mission-text p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .mission-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Values Section */
+        .values-section {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 50px;
+            font-size: 18px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value-card i {
+            font-size: 50px;
+            color: #6c63ff;
+            margin-bottom: 20px;
+        }
+
+        .value-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .value-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .team-card {
+            text-align: center;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            transition: transform 0.3s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .team-card h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .team-card p {
+            color: #6c63ff;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .team-card span {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .contact-info h2 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .contact-info p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .contact-details {
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-item i {
+            width: 45px;
+            height: 45px;
+            background: #6c63ff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .contact-item h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .contact-item p {
+            color: #666;
+            margin: 0;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .contact-form button {
+            width: 100%;
+            padding: 12px;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .contact-form button:hover {
+            background: #5a52d5;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .mission-grid, .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .about-hero h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <h2>🎉 EventSphere</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#venues">Venues</a></li>
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="nav-buttons" id="navButtons">
+            <!-- Dynamic buttons -->
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="about-hero">
+        <div class="container">
+            <h1>About EventSphere</h1>
+            <p>We're on a mission to make event planning effortless, enjoyable, and accessible for everyone.</p>
+        </div>
+    </section>
+
+    <!-- MISSION SECTION -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-grid">
+                <div class="mission-text">
+                    <h2>Our Mission</h2>
+                    <p>At EventSphere, we believe that planning a memorable event should be exciting, not stressful. Our platform brings together the best venues, vendors, and services in one place, making it easy for you to plan any event - from intimate birthday parties to grand weddings.</p>
+                    <p>Founded in 2024, we've already helped thousands of customers plan their dream events with complete confidence. Our team is dedicated to providing a seamless, transparent, and enjoyable planning experience.</p>
+                </div>
+                <div class="mission-image">
+                    <img src="images/about/mission.jpg" alt="Our Mission" onerror="this.src='https://images.pexels.com/photos/3184460/pexels-photo-3184460.jpeg?w=500&h=400'">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUES SECTION -->
+    <section class="values-section">
+        <div class="container">
+            <h2 class="section-title">Our Core Values</h2>
+            <p class="section-subtitle">What makes us different</p>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fa-solid fa-handshake"></i>
+                    <h3>Trust & Transparency</h3>
+                    <p>We believe in honest communication and transparent pricing. No hidden fees, no surprises.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-star"></i>
+                    <h3>Quality First</h3>
+                    <p>We partner only with verified, high-quality venues and vendors to ensure the best experience.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>Time Saving</h3>
+                    <p>Compare multiple options, book instantly, and manage everything from one dashboard.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated support team is always here to help you with any questions or concerns.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Venues Available</p>
+                </div>
+                <div class="stat-item">
+                    <h3>1000+</h3>
+                    <p>Trusted Vendors</p>
+                </div>
+                <div class="stat-item">
+                    <h3>10,000+</h3>
+                    <p>Happy Customers</p>
+                </div>
+                <div class="stat-item">
+                    <h3>50+</h3>
+                    <p>Cities Covered</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM SECTION -->
+    <section class="team-section">
+        <div class="container">
+            <h2 class="section-title">Meet Our Team</h2>
+            <p class="section-subtitle">The passionate people behind EventSphere</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="images/team/ceo.jpg" alt="CEO" onerror="this.src='https://randomuser.me/api/portraits/women/68.jpg'">
+                    <h3>Sunitha Allam</h3>
+                    <p>CEO & Founder</p>
+                    <span>Visionary leader with 10+ years in event planning</span>
+                </div>
+                <div class="team-card">
+                    <img src="images/team/cto.jpg" alt="CTO" onerror="this.src='https://randomuser.me/api/portraits/men/32.jpg'">
+                    <h3>Akhila Allam</h3>
+                    <p>CTO</p>
+                    <span>Tech expert building seamless experiences</span>
+                </div>
+                <div class="team-card">
+                    <img src="images/team/operations.jpg" alt="Operations" onerror="this.src='https://randomuser.me/api/portraits/women/45.jpg'">
+                    <h3>Sita Allam</h3>
+                    <p>Head of Operations</p>
+                    <span>Ensuring everything runs smoothly</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div>
+                                <h4>Visit Us</h4>
+                                <p>Hyderabad, Telangana, India</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-envelope"></i>
+                            <div>
+                                <h4>Email Us</h4>
+                                <p>support@eventsphere.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <div>
+                                <h4>Call Us</h4>
+                                <p>+91 98765 43210</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <input type="text" placeholder="Subject">
+                        <textarea placeholder="Your Message" required></textarea>
+                        <button type="submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <h2>EventSphere</h2>
+            <p>Your complete event planning solution.</p>
+            <p style="margin-top: 20px;">© 2024 EventSphere. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const isLoggedIn = token && user.name;
+
+        const navButtons = document.getElementById('navButtons');
+
+        if (isLoggedIn) {
+            let dashboardLink = '';
+            if (user.role === 'admin') {
+                dashboardLink = 'pages/admin/dashboard.html';
+            } else if (user.role === 'vendor') {
+                dashboardLink = 'pages/vendor/dashboard.html';
+            } else {
+                dashboardLink = 'pages/customer/dashboard.html';
+            }
+            
+            navButtons.innerHTML = `
+                <span class="user-welcome">👋 Hi, ${user.name}</span>
+                <a href="${dashboardLink}" class="dashboard-btn">📊 Dashboard</a>
+                <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+            `;
+        } else {
+            navButtons.innerHTML = `
+                <a href="pages/customer/login.html" class="login-btn">🔐 Login</a>
+                <a href="pages/customer/register.html" class="register-btn">📝 Register</a>
+            `;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Logged out successfully!');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

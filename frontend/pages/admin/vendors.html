@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Vendors - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; }
+        .navbar { background: #1a1a2e; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h2 { color: #6c63ff; }
+        .nav-links { display: flex; list-style: none; gap: 25px; }
+        .nav-links a { text-decoration: none; color: white; font-weight: 500; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        .page-header { margin-bottom: 30px; }
+        .vendors-table { background: white; border-radius: 16px; padding: 20px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #6c63ff; color: white; }
+        .role-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; background: #e8f5e9; color: #388e3c; display: inline-block; }
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .btn-approve { background: #28a745; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><h2>🎉 EventSphere Admin</h2></div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="users.html">Users</a></li>
+            <li><a href="venues.html">Venues</a></li>
+            <li><a href="vendors.html">Vendors</a></li>
+            <li><a href="bookings.html">Bookings</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+        </ul>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fa-solid fa-truck"></i> Manage Vendors</h1>
+        </div>
+        <div class="vendors-table" id="vendorsTable">Loading vendors...</div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!token || user.role !== 'admin') { window.location.href = '../../index.html'; }
+        
+        function logout() { localStorage.clear(); window.location.href = '../../index.html'; }
+        
+        async function loadVendors() {
+            try {
+                const res = await fetch('http://localhost:5000/api/admin/vendors', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const vendors = await res.json();
+                    displayVendors(vendors);
+                } else {
+                    document.getElementById('vendorsTable').innerHTML = '<div class="loading">Failed to load vendors</div>';
+                }
+            } catch(e) {
+                document.getElementById('vendorsTable').innerHTML = '<div class="loading">Error: Backend not running</div>';
+            }
+        }
+        
+        function displayVendors(vendors) {
+            const container = document.getElementById('vendorsTable');
+            if (vendors.length === 0) {
+                container.innerHTML = '<div class="loading">No vendors found</div>';
+                return;
+            }
+            container.innerHTML = `
+                <table>
+                    <thead><tr><th>ID</th><th>Business Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Joined</th></tr></thead>
+                    <tbody>
+                        ${vendors.map(v => `
+                            <tr>
+                                <td>${v.id}</td>
+                                <td>${v.full_name || v.name}</td>
+                                <td>${v.email}</td>
+                                <td>${v.phone || '-'}</td>
+                                <td><span class="role-badge">${v.status || 'Active'}</span></td>
+                                <td>${new Date(v.created_at).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+        
+        loadVendors();
+    </script>
+</body>
+</html>

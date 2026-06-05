@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Service - Vendor | EventSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f2f5; }
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo h2 { color: #6c63ff; }
+        .nav-links { display: flex; list-style: none; gap: 25px; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 500; }
+        .logout-btn { background: #dc3545; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; }
+        .container { max-width: 700px; margin: 0 auto; padding: 40px 20px; }
+        .form-card { background: white; border-radius: 20px; padding: 35px; box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+        .form-card h2 { margin-bottom: 25px; color: #333; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .btn-submit { background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+        .btn-cancel { background: #6c757d; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .success-message { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
+        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"><h2>🎉 EventSphere Vendor</h2></div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="my-services.html">My Services</a></li>
+            <li><a href="add-service.html">Add Service</a></li>
+            <li><a href="bookings.html">Bookings</a></li>
+            <li><a href="earnings.html">Earnings</a></li>
+        </ul>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </nav>
+
+    <div class="container">
+        <div class="form-card">
+            <h2><i class="fa-solid fa-plus-circle"></i> Add New Service</h2>
+            <div id="successMessage" class="success-message"></div>
+            <form id="addServiceForm">
+                <div class="form-group">
+                    <label>Service Name *</label>
+                    <input type="text" id="serviceName" required placeholder="e.g., Premium Wedding Catering">
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Catering">🍽️ Catering</option>
+                        <option value="Decoration">🎨 Decoration</option>
+                        <option value="Photography">📸 Photography</option>
+                        <option value="Music & DJ">🎵 Music & DJ</option>
+                        <option value="Makeup Artist">💄 Makeup Artist</option>
+                        <option value="Transport">🚗 Transport</option>
+                        <option value="Other">📦 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price (₹) *</label>
+                    <input type="number" id="price" required placeholder="Starting price">
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="description" required placeholder="Describe your service details..."></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="btn-submit">Add Service</button>
+                    <button type="button" class="btn-cancel" onclick="cancel()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        if (!token || user.role !== 'vendor') {
+            window.location.href = '../customer/login.html';
+        }
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = '../../index.html';
+        }
+        
+        function cancel() {
+            window.location.href = 'my-services.html';
+        }
+        
+        // Get existing services
+        function getServices() {
+            const services = localStorage.getItem('vendor_services');
+            return services ? JSON.parse(services) : [];
+        }
+        
+        // Save services
+        function saveServices(services) {
+            localStorage.setItem('vendor_services', JSON.stringify(services));
+        }
+        
+        // Add new service
+        document.getElementById('addServiceForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const serviceName = document.getElementById('serviceName').value;
+            const category = document.getElementById('category').value;
+            const price = document.getElementById('price').value;
+            const description = document.getElementById('description').value;
+            
+            if (!serviceName || !category || !price || !description) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            const services = getServices();
+            
+            const newService = {
+                id: Date.now(),
+                name: serviceName,
+                category: category,
+                price: parseInt(price),
+                description: description,
+                status: "active",
+                createdAt: new Date().toISOString()
+            };
+            
+            services.push(newService);
+            saveServices(services);
+            
+            // Show success message
+            const successDiv = document.getElementById('successMessage');
+            successDiv.innerHTML = '✅ Service added successfully! Redirecting...';
+            successDiv.style.display = 'block';
+            
+            // Redirect to my services after 1.5 seconds
+            setTimeout(() => {
+                window.location.href = 'my-services.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>
